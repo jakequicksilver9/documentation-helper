@@ -1,0 +1,73 @@
+{
+  // Point VS Code at the uv-managed venv (CPython 3.11) rather than the system
+  // 3.13 install. Only applies when no interpreter has been selected yet - if
+  // completions are still bare, run "Python: Select Interpreter" and pick .venv.
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+
+  // Off by default in Pylance. This is the setting that offers symbols you have
+  // not imported yet and adds the import for you - the behaviour PyCharm has
+  // out of the box.
+  "python.analysis.autoImportCompletions": true,
+
+  // Pylance's default is "off". Per the docs, "off" means "no type checking
+  // analysis is conducted" - it suppresses type-check DIAGNOSTICS. It does not
+  // document turning off the inference behind completions and hover, so "off"
+  // is a legitimate choice if you want no type errors at all.
+  "python.analysis.typeCheckingMode": "basic",
+
+  // Pylance indexes third-party packages one level deep unless told otherwise,
+  // and its built-in depth list covers sklearn/django/flask/fastapi but not
+  // langchain. Everything useful here lives deeper than level 1, e.g.
+  // langchain_core.prompts.PromptTemplate.
+  //
+  // NOTE: this REPLACES Pylance's default list rather than extending it, so the
+  // sklearn/matplotlib/scipy/django entries no longer apply in this workspace.
+  // That is fine for a langchain course repo; copy them back if you ever need them.
+  "python.analysis.packageIndexDepths": [
+    { "name": "langchain", "depth": 4, "includeAllSymbols": true },
+    { "name": "langchain_core", "depth": 4, "includeAllSymbols": true },
+    { "name": "langchain_openai", "depth": 3, "includeAllSymbols": true },
+    { "name": "langchain_classic", "depth": 4, "includeAllSymbols": true },
+    { "name": "langchain_community", "depth": 3, "includeAllSymbols": true },
+    { "name": "langchain_ollama", "depth": 3, "includeAllSymbols": true },
+    { "name": "langgraph", "depth": 4, "includeAllSymbols": true },
+    { "name": "pydantic", "depth": 2, "includeAllSymbols": true }
+  ],
+
+  // Silences "must return value on all code paths" / "X is not assignable to
+  // return type Y". While typing a function top-down the body is empty or
+  // half-written, so a declared -> float reads as returning None and Pylance
+  // flags it until you write the return. Verified that Pylance honours this
+  // rule name, though its published override list does not mention it.
+  //
+  // TRADE-OFF: this also hides genuine mismatches, e.g. declaring -> str on a
+  // function that returns tavily.search()'s dict. Set to "warning" instead of
+  // "none" to keep the signal without the red squiggle.
+  // "python.analysis.diagnosticSeverityOverrides": {
+  //   "reportReturnType": "none"
+  // },
+
+  // Adds the parentheses when you accept a function completion.
+  "python.analysis.completeFunctionParens": true,
+
+  // Shows inferred return types and variable types inline. Useful while learning
+  // a library whose chains return Runnables rather than obvious concrete types.
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": false,
+
+  // Tool schemas in LangChain are Pydantic models, so docstring rendering on
+  // hover matters more here than usual.
+  "python.analysis.supportDocstringTemplate": true,
+
+  "[python]": {
+    "editor.formatOnSave": false,
+    "editor.suggestSelection": "first",
+    // Show suggestions as you type rather than only on Ctrl+Space.
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": false
+    }
+  },
+  "python.terminal.useEnvFile": true
+}

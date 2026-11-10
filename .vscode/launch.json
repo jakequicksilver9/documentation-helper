@@ -1,0 +1,67 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // THE ONE YOU WANT most of the time. This repo is laid out the
+      // instructor's way - flat modules at the root (ingestion.py, main.py,
+      // backend/core.py) with an `if __name__ == "__main__":` guard - so
+      // debugging the focused file as a plain program is the correct shape.
+      // There is no src/ package and no console-script entry point here.
+      "name": "Debug current file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    },
+    {
+      // Same, but steps into library code. Use this for the "Agents Under The
+      // Hood" module - with justMyCode on, F11 skips straight over everything
+      // happening inside langchain_core, which is the part worth watching.
+      // Slower to start and noisier to step through.
+      "name": "Debug current file (step into LangChain)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": false
+    },
+    {
+      // Pinned to ingestion.py so you can run the indexing step from any
+      // editor tab. Exists from the 1-start-here lesson onward; on the bare
+      // 1-start-here branch you write this file yourself, so this config
+      // fails until it exists.
+      "name": "Debug ingestion.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ingestion.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    },
+    {
+      // Pinned to main.py - the retrieval/QA driver from 2-retrieval-qa on.
+      // On the 3-frontend branches main.py becomes a Streamlit app, which
+      // must be launched by the streamlit CLI rather than as a plain program;
+      // add a config with "module": "streamlit", args ["run", "main.py"]
+      // once you reach that lesson.
+      "name": "Debug main.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    }
+  ]
+}
